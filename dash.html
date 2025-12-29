@@ -1,127 +1,296 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinControl | Student Finance Hub</title>
-
-    <!-- Tailwind (layout only, NOT colors) -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="dash.css">
-</head>
-
-<body class="app-body flex">
-
-    <!-- Sidebar -->
-    <aside class="sidebar flex flex-col w-64">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         
-        <!-- Header -->
-        <div class="sidebar-header p-6 flex items-center gap-3">
-            <div class="logo">
-                <i data-lucide="zap"></i>
-            </div>
-            <h1 class="text-xl font-bold">FinControl</h1>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Light Theme (Green & White) */
+        .theme-light { background-color: #f0fdf4; color: #166534; }
+        .theme-light .sidebar { background: #ffffff; border-right: 1px solid #dcfce7; }
+        .theme-light .card { background: white; border: 1px solid #dcfce7; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        .theme-light .accent-btn { background-color: #22c55e; color: white; }
+        .theme-light .input-field { background: #f9fafb; border: 1px solid #e5e7eb; color: #1f2937; }
+        .theme-light .nav-item:hover { background: #f0fdf4; color: #16a34a; }
+        .theme-light .nav-item.active { background: #dcfce7; color: #15803d; border-left: 4px solid #22c55e; }
+        .theme-light .step-indicator.active { background-color: #22c55e; color: white; }
+        .theme-light .step-indicator { background-color: #e5e7eb; color: #6b7280; }
+
+        /* Dark Theme (Red & Black) */
+        .theme-dark { background-color: #000000; color: #ef4444; }
+        .theme-dark .sidebar { background: #0a0a0a; border-right: 1px solid #450a0a; }
+        .theme-dark .card { background: #0a0a0a; border: 1px solid #450a0a; box-shadow: 0 10px 15px -3px rgb(220 38 38 / 0.1); }
+        .theme-dark .accent-btn { background-color: #dc2626; color: white; }
+        .theme-dark .input-field { background: #111111; border: 1px solid #450a0a; color: #f87171; }
+        .theme-dark .nav-item:hover { background: #1a0a0a; color: #ff4444; }
+        .theme-dark .nav-item.active { background: #450a0a; color: #ffffff; border-left: 4px solid #dc2626; }
+        .theme-dark h1, .theme-dark h2, .theme-dark h3 { color: white; }
+        .theme-dark .step-indicator.active { background-color: #dc2626; color: white; }
+        .theme-dark .step-indicator { background-color: #1a0a0a; color: #450a0a; }
+
+        .nav-item { display: flex; align-items: center; padding: 0.75rem 1.5rem; margin: 0.25rem 0; transition: all 0.2s ease; cursor: pointer; font-weight: 500; }
+        
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #22c55e; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #dc2626; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .page { display: none; }
+        .page.active { display: block; }
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+        .content-area { flex: 1; overflow-y: auto; padding: 2rem; }
+    </style>
+</head>
+<body class="theme-light flex" id="app-body">
+
+    <aside class="sidebar w-64 flex flex-col shrink-0">
+        <div class="p-6 pt-8 flex items-center gap-3">
+            <i data-lucide="zap"></i>
+            <h1 class="text-xl font-bold tracking-tight">FinControl</h1>
         </div>
 
-        <!-- Navigation -->
-        <nav class="flex-1 mt-4 overflow-y-auto">
-            <p class="section-label">Core</p>
-            <a class="nav-item active" onclick="navigate(event,'dashboard')">
-                <i data-lucide="layout-dashboard"></i>
-                <span class="nav-text">Dashboard</span>
-            </a>
+        <nav class="flex-1 overflow-y-auto">
+            <p class="px-6 text-xs font-semibold opacity-50 uppercase tracking-wider mb-2">Core</p>
+            <div class="nav-item active" onclick="showPage('dashboard', this)">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i> Dashboard
+            </div>
+            
+            <p class="px-6 text-xs font-semibold opacity-50 uppercase tracking-wider mt-6 mb-2">Tools</p>
+            <div class="nav-item" onclick="showPage('bill-split', this)">
+                <i data-lucide="users" class="w-5 h-5 mr-3"></i> Bill Split
+            </div>
+            <div class="nav-item" onclick="showPage('itr', this)">
+                <i data-lucide="file-text" class="w-5 h-5 mr-3"></i> Mock ITR Filling
+            </div>
+            <div class="nav-item" onclick="showPage('predictive', this)">
+                <i data-lucide="trending-up" class="w-5 h-5 mr-3"></i> Predictive Spending
+            </div>
+            <div class="nav-item" onclick="showPage('stocks', this)">
+                <i data-lucide="candlestick-chart" class="w-5 h-5 mr-3"></i> Stock Simulation
+            </div>
 
-            <p class="section-label">Tools</p>
-            <a class="nav-item" onclick="navigate(event,'bill-split')">
-                <i data-lucide="users"></i>
-                <span class="nav-text">Bill Split</span>
-            </a>
-            <a class="nav-item" onclick="navigate(event,'predictive')">
-                <i data-lucide="trending-up"></i>
-                <span class="nav-text">Predictive Spending</span>
-            </a>
-            <a class="nav-item" onclick="navigate(event,'itr')">
-                <i data-lucide="file-text"></i>
-                <span class="nav-text">Mock ITR</span>
-            </a>
-            <a class="nav-item" onclick="navigate(event,'stocks')">
-                <i data-lucide="candlestick-chart"></i>
-                <span class="nav-text">Stocks Simulation</span>
-            </a>
+            <p class="px-6 text-xs font-semibold opacity-50 uppercase tracking-wider mt-6 mb-2">Safety & Education</p>
+            <div class="nav-item" onclick="showPage('scam', this)">
+                <i data-lucide="shield-alert" class="w-5 h-5 mr-3"></i> Scam Hunter
 
-            <p class="section-label">Safety & Education</p>
-            <a class="nav-item" onclick="navigate(event,'scam')">
-                <i data-lucide="shield-alert"></i>
-                <span class="nav-text">Scam Hunter</span>
-            </a>
-            <a class="nav-item" onclick="navigate(event,'scholarships')">
-                <i data-lucide="award"></i>
-                <span class="nav-text">Scholarships</span>
-            </a>
-            <a class="nav-item" onclick="navigate(event,'awareness')">
-                <i data-lucide="alert-circle"></i>
-                <span class="nav-text">Awareness & Rumors</span>
-            </a>
+            </div>
+            <div class="nav-item" onclick="showPage('stocks', this)">
+                <i data-lucide="book-open" class="w-5 h-5 mr-3"></i> Scholarships
+            </div>
+            <div class="nav-item" onclick="showPage('stocks', this)">
+                <i data-lucide="candlestick-chart" class="w-5 h-5 mr-3"></i> Rumours and Awareness
+            </div>
         </nav>
 
-        <!-- Theme Toggle -->
-        <div class="toggle-box">
-            <button onclick="toggleTheme()" id="themeBtn">
-                <i data-lucide="moon"></i>
-                <span>Dark Mode</span>
-            </button>
-        </div>        
+        <div class="p-6 border-t border-current/10">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase">Toggle Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-8">
-        <section id="dashboard" class="page">
-            <h2 class="text-3xl font-bold mb-4">Student Financial Health Score</h2>
-            <p>Your all-in-one money overview.</p>
-        </section>
+    <main class="content-area">
+        <div class="max-w-4xl mx-auto">
+            
+            <section id="dashboard" class="page active">
+                <h1 class="text-3xl font-bold mb-4">Financial Health Score</h1>
+                <p>Welcome back to your financial hub.</p>
+            </section>
 
-        <section id="bill-split" class="page hidden">
-            <h2 class="text-2xl font-bold">Bill Split</h2>
-            <p>Split expenses. No more “I’ll pay later”.</p>
-        </section>
+            <section id="bill-split" class="page">
+                <h1 class="text-3xl font-bold mb-8">Bill Splitter</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div class="card p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="receipt"></i> Bill Details</h3>
+                            <label class="block text-xs font-bold uppercase mb-1 opacity-60">Total Amount</label>
+                            <input type="number" id="total-amount" placeholder="0.00" class="input-field w-full p-3 rounded-lg text-xl mb-4 outline-none font-bold">
+                            <label class="block text-xs font-bold uppercase mb-1 opacity-60">Number of People</label>
+                            <input type="number" id="num-people" value="1" class="input-field w-full p-3 rounded-lg text-xl outline-none font-bold">
+                        </div>
+                        <button onclick="calculateSplit()" class="accent-btn w-full py-4 rounded-xl font-bold shadow-lg transition-transform active:scale-95">Calculate Split</button>
+                    </div>
+                    <div id="split-res" class="hidden card p-8 rounded-2xl border-2 border-dashed border-current flex flex-col items-center justify-center text-center">
+                        <h3 class="text-lg font-bold mb-2 opacity-70">Each Person Pays</h3>
+                        <div id="per-person-display" class="text-5xl font-bold mb-4 tabular-nums">₹0.00</div>
+                    </div>
+                </div>
+            </section>
 
-        <section id="predictive" class="page hidden">
-            <h2 class="text-2xl font-bold">Predictive Spending</h2>
-            <p>Forecast when you’ll go broke 😬</p>
-        </section>
+            <section id="itr" class="page">
+                <header class="mb-8 flex justify-between items-end">
+                    <div>
+                        <h1 class="text-3xl font-bold">Mock ITR Filling</h1>
+                        <p class="opacity-70">Experience the tax filing process with zero risk.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <div id="step-1-ind" class="step-indicator active w-8 h-8 rounded-full flex items-center justify-center font-bold">1</div>
+                        <div id="step-2-ind" class="step-indicator w-8 h-8 rounded-full flex items-center justify-center font-bold">2</div>
+                        <div id="step-3-ind" class="step-indicator w-8 h-8 rounded-full flex items-center justify-center font-bold">3</div>
+                        <div id="step-4-ind" class="step-indicator w-8 h-8 rounded-full flex items-center justify-center font-bold">4</div>
+                    </div>
+                </header>
 
-        <section id="itr" class="page hidden">
-            <h2 class="text-2xl font-bold">Mock ITR</h2>
-            <p>Learn tax filing without fear.</p>
-        </section>
+                <div class="card p-8 rounded-2xl min-h-[400px]">
+                    <div id="step-1" class="step-content active space-y-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="user"></i> Personal Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1 opacity-60">Full Name</label>
+                                <input type="text" placeholder="John Doe" class="input-field w-full p-3 rounded-lg outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1 opacity-60">PAN Number (Mock)</label>
+                                <input type="text" placeholder="ABCDE1234F" class="input-field w-full p-3 rounded-lg outline-none uppercase">
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-4"><button onclick="nextStep(2)" class="accent-btn px-8 py-3 rounded-xl font-bold">Continue to Income</button></div>
+                    </div>
 
-        <section id="stocks" class="page hidden">
-            <h2 class="text-2xl font-bold">Mock Stocks</h2>
-            <p>Practice investing with fake money.</p>
-        </section>
+                    <div id="step-2" class="step-content space-y-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="wallet"></i> Gross Total Income</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1 opacity-60">Income from Salary</label>
+                                <input type="number" id="income-salary" placeholder="0" class="input-field w-full p-3 rounded-lg outline-none text-lg font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1 opacity-60">Income from Other Sources</label>
+                                <input type="number" id="income-other" placeholder="0" class="input-field w-full p-3 rounded-lg outline-none text-lg font-bold">
+                            </div>
+                        </div>
+                        <div class="flex justify-between pt-4">
+                            <button onclick="nextStep(1)" class="opacity-50 font-bold">Back</button>
+                            <button onclick="nextStep(3)" class="accent-btn px-8 py-3 rounded-xl font-bold">Continue to Deductions</button>
+                        </div>
+                    </div>
 
-        <section id="scam" class="page hidden">
-            <h2 class="text-2xl font-bold">Scam Hunter</h2>
-            <p>Spot frauds before they spot you.</p>
-        </section>
+                    <div id="step-3" class="step-content space-y-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="shield-check"></i> Deductions (80C, etc.)</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1 opacity-60">Section 80C (Max 1,50,000)</label>
+                                <input type="number" id="deduction-80c" placeholder="0" class="input-field w-full p-3 rounded-lg outline-none text-lg font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1 opacity-60">Section 80D (Health Insurance)</label>
+                                <input type="number" id="deduction-80d" placeholder="0" class="input-field w-full p-3 rounded-lg outline-none text-lg font-bold">
+                            </div>
+                        </div>
+                        <div class="flex justify-between pt-4">
+                            <button onclick="nextStep(2)" class="opacity-50 font-bold">Back</button>
+                            <button onclick="calculateTax()" class="accent-btn px-8 py-3 rounded-xl font-bold">Calculate Tax Liability</button>
+                        </div>
+                    </div>
 
-        <section id="scholarships" class="page hidden">
-            <h2 class="text-2xl font-bold">Scholarships</h2>
-            <p>Find financial aid you didn’t know existed.</p>
-        </section>
+                    <div id="step-4" class="step-content space-y-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="file-check"></i> Tax Computation Summary</h2>
+                        <div class="space-y-3 p-4 bg-black bg-opacity-5 rounded-xl">
+                            <div class="flex justify-between border-b border-current border-opacity-10 pb-2">
+                                <span class="opacity-70">Gross Total Income:</span><span class="font-bold" id="res-gross">₹0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-current border-opacity-10 pb-2">
+                                <span class="opacity-70">Total Deductions:</span><span class="font-bold text-red-500" id="res-deductions">₹0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70 font-bold">Net Taxable Income:</span><span class="font-bold" id="res-taxable">₹0</span>
+                            </div>
+                        </div>
+                        <div class="text-center p-6 bg-current bg-opacity-10 rounded-2xl border-2 border-current">
+                            <p class="text-sm uppercase font-bold opacity-60 mb-1">Estimated Tax Payable</p>
+                            <h3 class="text-4xl font-bold" id="res-tax-payable">₹0.00</h3>
+                        </div>
+                        <div class="flex justify-between pt-4">
+                            <button onclick="nextStep(3)" class="opacity-50 font-bold">Edit Details</button>
+                            <button onclick="showPage('itr', document.querySelector('[onclick*=\'itr\']'))" class="border-2 border-current px-8 py-3 rounded-xl font-bold hover:bg-current hover:text-white transition-all">File New Mock ITR</button>
+                        </div>
+                    </div>
+                </div>
 
-        <section id="awareness" class="page hidden">
-            <h2 class="text-2xl font-bold">Awareness & Rumors</h2>
-            <p>Financial myths, scams, and campus alerts.</p>
-        </section>
+                <div class="mt-8 card p-4 rounded-xl flex items-center gap-4 opacity-80">
+                    <div class="w-10 h-10 bg-blue-500 bg-opacity-10 text-blue-500 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="info"></i></div>
+                    <p class="text-sm"><b>Pro Tip:</b> This uses simplified Old Regime slabs. Always consult a CA for actual filing.</p>
+                </div>
+            </section>
+
+        </div>
     </main>
 
-    <!-- JS -->
-    <script src="dash.js"></script>
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+
+        function showPage(pageId, navEl) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            navEl.classList.add('active');
+            if(pageId === 'itr') nextStep(1);
+        }
+
+        function toggleTheme() {
+            const body = document.getElementById('app-body');
+            const isDark = document.getElementById('theme-toggle').checked;
+            body.className = isDark ? 'theme-dark flex' : 'theme-light flex';
+            lucide.createIcons();
+        }
+
+        function nextStep(stepNum) {
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.step-indicator').forEach(i => i.classList.remove('active'));
+            document.getElementById(`step-${stepNum}`).classList.add('active');
+            for(let i=1; i<=stepNum; i++) document.getElementById(`step-${i}-ind`).classList.add('active');
+        }
+
+        function calculateTax() {
+            const salary = parseFloat(document.getElementById('income-salary').value) || 0;
+            const other = parseFloat(document.getElementById('income-other').value) || 0;
+            const d80c = Math.min(parseFloat(document.getElementById('deduction-80c').value) || 0, 150000);
+            const d80d = parseFloat(document.getElementById('deduction-80d').value) || 0;
+
+            const gross = salary + other;
+            const totalDeductions = d80c + d80d;
+            const taxable = Math.max(0, gross - totalDeductions);
+
+            let tax = 0;
+            if (taxable > 1000000) tax = (taxable - 1000000) * 0.3 + 112500;
+            else if (taxable > 500000) tax = (taxable - 500000) * 0.2 + 12500;
+            else if (taxable > 250000) tax = (taxable - 250000) * 0.05;
+
+            document.getElementById('res-gross').textContent = `₹${gross.toLocaleString()}`;
+            document.getElementById('res-deductions').textContent = `-₹${totalDeductions.toLocaleString()}`;
+            document.getElementById('res-taxable').textContent = `₹${taxable.toLocaleString()}`;
+            document.getElementById('res-tax-payable').textContent = `₹${tax.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            nextStep(4);
+        }
+
+        function calculateSplit() {
+            const total = parseFloat(document.getElementById('total-amount').value) || 0;
+            const people = parseInt(document.getElementById('num-people').value) || 1;
+            if(total > 0) {
+                document.getElementById('per-person-display').textContent = `₹${(total/people).toFixed(2)}`;
+                document.getElementById('split-res').classList.remove('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
