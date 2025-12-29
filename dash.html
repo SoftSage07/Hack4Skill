@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>FinControl | Student Finance Hub</title>
+
+    <!-- Tailwind (layout only, NOT colors) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="dash.css">
+</head>
+
+<body class="app-body flex">
+
+    <!-- Sidebar -->
+    <aside class="sidebar flex flex-col w-64">
+        
+        <!-- Header -->
+        <div class="sidebar-header p-6 flex items-center gap-3">
+            <div class="logo">
+                <i data-lucide="zap"></i>
+            </div>
+            <h1 class="text-xl font-bold">FinControl</h1>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 mt-4 overflow-y-auto">
+            <p class="section-label">Core</p>
+            <a class="nav-item active" onclick="navigate(event,'dashboard')">
+                <i data-lucide="layout-dashboard"></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+
+            <p class="section-label">Tools</p>
+            <a class="nav-item" onclick="navigate(event,'bill-split')">
+                <i data-lucide="users"></i>
+                <span class="nav-text">Bill Split</span>
+            </a>
+            <a class="nav-item" onclick="navigate(event,'predictive')">
+                <i data-lucide="trending-up"></i>
+                <span class="nav-text">Predictive Spending</span>
+            </a>
+            <a class="nav-item" onclick="navigate(event,'itr')">
+                <i data-lucide="file-text"></i>
+                <span class="nav-text">Mock ITR</span>
+            </a>
+            <a class="nav-item" onclick="navigate(event,'stocks')">
+                <i data-lucide="candlestick-chart"></i>
+                <span class="nav-text">Stocks Simulation</span>
+            </a>
+
+            <p class="section-label">Safety & Education</p>
+            <a class="nav-item" onclick="navigate(event,'scam')">
+                <i data-lucide="shield-alert"></i>
+                <span class="nav-text">Scam Hunter</span>
+            </a>
+            <a class="nav-item" onclick="navigate(event,'scholarships')">
+                <i data-lucide="award"></i>
+                <span class="nav-text">Scholarships</span>
+            </a>
+            <a class="nav-item" onclick="navigate(event,'awareness')">
+                <i data-lucide="alert-circle"></i>
+                <span class="nav-text">Awareness & Rumors</span>
+            </a>
+        </nav>
+
+        <!-- Theme Toggle -->
+        <div class="toggle-box">
+            <button onclick="toggleTheme()" id="themeBtn">
+                <i data-lucide="moon"></i>
+                <span>Dark Mode</span>
+            </button>
+        </div>        
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        <section id="dashboard" class="page">
+            <h2 class="text-3xl font-bold mb-4">Student Financial Health Score</h2>
+            <p>Your all-in-one money overview.</p>
+        </section>
+
+        <section id="bill-split" class="page hidden">
+            <h2 class="text-2xl font-bold">Bill Split</h2>
+            <p>Split expenses. No more “I’ll pay later”.</p>
+        </section>
+
+        <section id="predictive" class="page hidden">
+            <h2 class="text-2xl font-bold">Predictive Spending</h2>
+            <p>Forecast when you’ll go broke 😬</p>
+        </section>
+
+        <section id="itr" class="page hidden">
+            <h2 class="text-2xl font-bold">Mock ITR</h2>
+            <p>Learn tax filing without fear.</p>
+        </section>
+
+        <section id="stocks" class="page hidden">
+            <h2 class="text-2xl font-bold">Mock Stocks</h2>
+            <p>Practice investing with fake money.</p>
+        </section>
+
+        <section id="scam" class="page hidden">
+            <h2 class="text-2xl font-bold">Scam Hunter</h2>
+            <p>Spot frauds before they spot you.</p>
+        </section>
+
+        <section id="scholarships" class="page hidden">
+            <h2 class="text-2xl font-bold">Scholarships</h2>
+            <p>Find financial aid you didn’t know existed.</p>
+        </section>
+
+        <section id="awareness" class="page hidden">
+            <h2 class="text-2xl font-bold">Awareness & Rumors</h2>
+            <p>Financial myths, scams, and campus alerts.</p>
+        </section>
+    </main>
+
+    <!-- JS -->
+    <script src="dash.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

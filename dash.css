@@ -1,0 +1,124 @@
+/* ===== THEME VARIABLES ===== */
+:root {
+    --bg: #ffffff;              /* WHITE background */
+    --sidebar: #ffffff;         /* WHITE sidebar */
+    --text: #0f172a;
+    --accent: #16a34a;          /* GREEN */
+    --hover: rgba(22,163,74,0.08);
+    --border: #e5e7eb;
+}
+
+[data-theme="dark"] {
+    --bg: #020617;              /* BLACK */
+    --sidebar: #020617;         /* BLACK sidebar */
+    --text: #f8fafc;
+    --accent: #dc2626;          /* RED */
+    --hover: rgba(220,38,38,0.15);
+    --border: #1e293b;
+}
+
+/* ===== GLOBAL RESET ===== */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    height: 100%;
+    font-family: system-ui, sans-serif;
+}
+
+.app-body {
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    transition: background-color 0.25s ease;
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    background-color: var(--accent);
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* ===== SECTION LABELS ===== */
+.section-label {
+    padding: 0 2rem;
+    margin: 1.5rem 0 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+/* ===== NAV ITEMS ===== */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem 1.2rem;
+    cursor: pointer;
+    color: var(--text);
+    transition: background-color 0.2s ease;
+}
+
+.nav-item:hover {
+    background-color: var(--hover);
+}
+
+.nav-item.active {
+    background-color: var(--hover);
+    border-left: 4px solid var(--accent);
+    font-weight: 600;
+}
+
+.nav-text {
+    white-space: nowrap;
+}
+
+/* ===== THEME TOGGLE ===== */
+.toggle-box {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.toggle-box button {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: var(--accent);
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* ===== MAIN CONTENT ===== */
+main {
+    flex: 1;
+    padding: 2rem;
+    background-color: var(--bg);
+}
+
+.page.hidden {
+    display: none;
+}
